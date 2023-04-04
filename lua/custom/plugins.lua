@@ -35,14 +35,14 @@ local plugins = {
   --     require("mini.surround").setup(opts)
   --   end,
   -- },
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      -- From: https://nvchad.com/docs/config/lsp
-      require "plugins.configs.lspconfig"
-      require "custom.configs.lspconfig"
-    end,
-  },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   config = function()
+  --     -- From: https://nvchad.com/docs/config/lsp
+  --     require "plugins.configs.lspconfig"
+  --     require "custom.configs.lspconfig"
+  --   end,
+  -- },
 
 }
 
