@@ -3,8 +3,10 @@
 -- https://www.youtube.com/watch?v=Mtgo-nP_r8Y
 local M = {}
 M.ui = {
-  theme = 'catppuccin',
+  theme = 'chadracula',
   hl_override = {
+    -- Reasoning for the CursorLine override:
+    -- https://github.com/NvChad/NvChad/issues/863
     CursorLine = {
       bg = "one_bg",
     },
