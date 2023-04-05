@@ -12,6 +12,8 @@ global.netrw_banner = 0
 global.netrw_winsize = 25
 
 -- Python provider setup
+-- Enable python provider (NvChad seems to disable by default)
+global.loaded_python3_provider = 1
 global.python3_host_prog = os.getenv("HOME") .. "/environments/neovim-provider/bin/python3"
 
 --------------------options--------------------
