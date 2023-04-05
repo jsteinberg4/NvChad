@@ -16,7 +16,7 @@ M.lsp_server_names = {
   "html",
   "cssls",
   "clangd",
-  "lua_ls",
+  -- "lua_ls",
   "pyright",
 }
 
