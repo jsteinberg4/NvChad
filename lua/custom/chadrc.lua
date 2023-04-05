@@ -3,7 +3,7 @@
 -- https://www.youtube.com/watch?v=Mtgo-nP_r8Y
 local M = {}
 M.ui = {
-  theme = 'chadracula',
+  theme = 'chocolate',
   hl_override = {
     -- Reasoning for the CursorLine override:
     -- https://github.com/NvChad/NvChad/issues/863
