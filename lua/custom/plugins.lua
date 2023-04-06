@@ -248,18 +248,18 @@ local plugins = {
       return {
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         -- NOTE: https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
-        sources = {
+        sources = { -- FIXME: Several of these need to be installed on path?
           -- Completion
           nls.builtins.completion.spell,
           -- Diagnostics
-          nls.builtins.diagnostics.jsonlint,
-          nls.builtins.diagnostics.markdownlint,
+          -- nls.builtins.diagnostics.jsonlint,
+          -- nls.builtins.diagnostics.markdownlint,
           nls.builtins.diagnostics.pylint,
-          nls.builtins.diagnostics.write_good, -- "English prose linter"
+          -- nls.builtins.diagnostics.write_good, -- "English prose linter"
           -- Formatters
           nls.builtins.formatting.autoflake,
           nls.builtins.formatting.black,
-          nls.builtins.formatting.shfmt,
+          -- nls.builtins.formatting.shfmt,
           nls.builtins.formatting.stylua,
           -- Hover
           nls.builtins.hover.dictionary, -- Definitions
