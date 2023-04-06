@@ -239,6 +239,7 @@ local plugins = {
     cmd = { "DapContinue" }, -- TODO: may want to change these commands
   },
   {
+    -- TODO: Format on write
     "jose-elias-alvarez/null-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "mason.nvim" },
@@ -266,6 +267,18 @@ local plugins = {
         },
       }
     end,
+  },
+  {
+    -- TODO: Opts?
+    "windwp/nvim-spectre",
+    cmd = "Spectre",
+    -- stylua: ignore
+    keys = {
+      { "<leader>sr", function() require("spectre").open() end, desc = "Replace in files (Spectre)", silent = true },
+      { "<leader>sw", function() require("spectre").open_visual { select_word = true } end, desc = "Search current word (Spectre)", silent = true },
+      { "<leader>sw", "<ESC><CMD>lua require('spectre').open_visual()<CR>", desc = "Search current word (Spectre)", silent = true, mode = "v" },
+      { "<leader>sp", function() require("spectre").open_file_search { select_word = true } end, desc = "Search on current file (Spectre)", silent = true },
+    },
   },
 }
 
