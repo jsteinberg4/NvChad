@@ -3,9 +3,9 @@
 -- https://www.youtube.com/watch?v=Mtgo-nP_r8Y
 local M = {}
 M.ui = {
-  theme = 'doomchad',
+  theme = 'palenight',
   -- TODO: Find a tolerable light theme to toggle to
-  theme_toggle = { "doomchad", "everforest_light" },
+  theme_toggle = { "palenight", "everforest_light" },
   hl_override = {
     -- Reasoning for the CursorLine override:
     -- https://github.com/NvChad/NvChad/issues/863

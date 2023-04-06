@@ -41,9 +41,18 @@ local plugins = {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
+      {
+        "folke/neoconf.nvim",
+        cmd = "Neoconf",
+        config = true,
+        opts = {
+          global_settings = "neoconf-global.json",
+        },
+      },
       { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
     },
     config = function()
+      require "custom.configs.pre-lspconfig"
       -- From: https://nvchad.com/docs/config/lsp
       require "plugins.configs.lspconfig"
       require "custom.configs.lspconfig"
@@ -57,12 +66,7 @@ local plugins = {
     opts = {
       -- This seems related to ts_context_commentstring
       context_commentstring = { enable = true, enable_autocmd = false },
-      ensure_installed = {
-        "lua",
-        "python",
-        "gitignore",
-        "bash",
-      },
+      ensure_installed = require("custom.configs.lsp_servers").treesitter_servers,
       rainbow = { -- Rainbow brackets config
         enable = true,
         -- disable = {} -- List[str] of languages to disable this for
@@ -234,7 +238,6 @@ local plugins = {
     },
     cmd = { "DapContinue" }, -- TODO: may want to change these commands
   },
-  { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
   {
     "jose-elias-alvarez/null-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -243,10 +246,23 @@ local plugins = {
       local nls = require "null-ls"
       return {
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
+        -- NOTE: https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
         sources = {
-          nls.builtins.formatting.stylua,
-          nls.builtins.formatting.shfmt,
+          -- Completion
+          nls.builtins.completion.spell,
+          -- Diagnostics
+          nls.builtins.diagnostics.jsonlint,
+          nls.builtins.diagnostics.markdownlint,
+          nls.builtins.diagnostics.pylint,
+          nls.builtins.diagnostics.write_good, -- "English prose linter"
+          -- Formatters
           nls.builtins.formatting.autoflake,
+          nls.builtins.formatting.black,
+          nls.builtins.formatting.shfmt,
+          nls.builtins.formatting.stylua,
+          -- Hover
+          nls.builtins.hover.dictionary, -- Definitions
+          nls.builtins.hover.printenv, -- Show env values
         },
       }
     end,
