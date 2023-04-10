@@ -252,14 +252,14 @@ local plugins = {
           -- Completion
           nls.builtins.completion.spell,
           -- Diagnostics
-          -- nls.builtins.diagnostics.jsonlint,
-          -- nls.builtins.diagnostics.markdownlint,
+          nls.builtins.diagnostics.jsonlint,
+          nls.builtins.diagnostics.markdownlint,
           nls.builtins.diagnostics.pylint,
-          -- nls.builtins.diagnostics.write_good, -- "English prose linter"
+          nls.builtins.diagnostics.write_good, -- "English prose linter"
           -- Formatters
           nls.builtins.formatting.autoflake,
           nls.builtins.formatting.black,
-          -- nls.builtins.formatting.shfmt,
+          nls.builtins.formatting.shfmt,
           nls.builtins.formatting.stylua,
           -- Hover
           nls.builtins.hover.dictionary, -- Definitions

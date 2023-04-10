@@ -15,7 +15,8 @@ M.disabled = {
 M.nvim_mappings = {
   -- Mappings for basic NVim functions
   n = {
-    ["<Space>"] = { "<Nop>", "Space does nothing in normal mode" },
+    -- NOTE: Don't need to disable; space triggers whichkey
+    -- ["<Space>"] = { "<Nop>", "Space does nothing in normal mode" },
     ["J"] = { "mzJ`z", "Join lines w/o moving cursor" },
     ["<leader>lz"] = { "<CMD>Lazy<CR>", "Open [l]a[z]y UI", opts = { silent = true } },
     ["gg"] = { "ggzz", "GOTO top, center cursor" },
@@ -26,7 +27,7 @@ M.nvim_mappings = {
     ["N"] = { "Nzzzv", "Center cursor while searching" },
   },
   v = {
-    ["<Space>"] = { "<Nop>", "Space does nothing in visual mode" },
+    -- ["<Space>"] = { "<Nop>", "Space does nothing in visual mode" },
     ["J"] = { ":m '>+1<CR>gv=gv", "Move selected line down", opts = { silent = true } },
     ["K"] = { ":m '<-2<CR>gv=gv", "Move selected line up", opts = { silent = true } },
   },
