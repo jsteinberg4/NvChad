@@ -17,6 +17,9 @@ M.mason_servers = {
   "yaml-language-server",
   -- Linters
   "pylint",
+  "jsonlint",
+  "markdownlint",
+  "write-good",
   -- Formatters
   "autoflake",
   "black",

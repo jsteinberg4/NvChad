@@ -1,5 +1,10 @@
 -- Configuration for folke/todo-comments.nvim
 local M = {}
+
+M.keywords = {
+  NOTE = { alt = { "INFO", "SEE" } },
+}
+
 return M
 -- local defaults = {
 --   signs = true, -- show icons in the signs column

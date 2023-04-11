@@ -2,6 +2,36 @@
 -- Plugin definitions follow the folke/lazy.nvim spec
 local plugins = {
   {
+    "RRethy/vim-illuminate",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = { delay = 200 },
+    config = function(_, opts)
+      -- TODO: Extract to config file
+      require("illuminate").configure(opts)
+      local function map(key, dir, buffer)
+        vim.keymap.set("n", key, function()
+          require("illuminate")["goto_" .. dir .. "_reference"](false)
+        end, { desc = dir:sub(1, 1):upper() .. dir:sub(2) .. " Reference", buffer = buffer })
+      end
+
+      map("]]", "next")
+      map("[[", "prev")
+
+      -- also set it after loading ftplugins, since a lot overwrite [[ and ]]
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function()
+          local buffer = vim.api.nvim_get_current_buf()
+          map("]]", "next", buffer)
+          map("[[", "prev", buffer)
+        end,
+      })
+    end,
+    keys = {
+      { "]]", desc = "Next Reference" },
+      { "[[", desc = "Prev Reference" },
+    },
+  },
+  {
     -- TODO: Automatically run MasonInstall{All?} if servers are not present
     "williamboman/mason.nvim",
     -- priority = 55, -- Force loading before mason-lspconfig
@@ -14,9 +44,8 @@ local plugins = {
     dependencies = { "nvim-lua/plenary.nvim" },
     event = { "BufNewFile", "BufRead", "BufReadPost" },
     opts = require "custom.configs.todo-comments",
-    config = function(_, opts)
-      require("todo-comments").setup(opts)
-    end,
+    -- stylua: ignore
+    config = function(_, opts) require("todo-comments").setup(opts) end,
   },
   -- {
   --   "williamboman/mason-lspconfig.nvim",
@@ -42,6 +71,14 @@ local plugins = {
     "neovim/nvim-lspconfig",
     dependencies = {
       {
+        -- TODO: Format on write
+        "jose-elias-alvarez/null-ls.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = { "mason.nvim" },
+        -- stylua: ignore
+        opts = function() return require "custom.configs.null-ls" end,
+      },
+      {
         "folke/neoconf.nvim",
         cmd = "Neoconf",
         config = true,
@@ -60,102 +97,14 @@ local plugins = {
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = {
-      { "p00f/nvim-ts-rainbow", lazy = true },
-    },
-    opts = {
-      -- This seems related to ts_context_commentstring
-      context_commentstring = { enable = true, enable_autocmd = false },
-      ensure_installed = require("custom.configs.lsp_servers").treesitter_servers,
-      rainbow = { -- Rainbow brackets config
-        enable = true,
-        -- disable = {} -- List[str] of languages to disable this for
-        extended_mode = true, -- also highlight non-braket delimiters
-        max_file_lines = 1000, -- Disable for files over N lines
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<C-Space>",
-          node_incremental = "<C-Space>",
-          scope_incremental = "<nop>",
-          node_decremental = "<BS>",
-        },
-      },
-      textobjects = {
-        select = {
-          enable = true,
-          lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-          keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
-            ["aa"] = "@parameter.outer",
-            ["ia"] = "@parameter.inner",
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = "@class.inner",
-          },
-        },
-        move = {
-          enable = true,
-          set_jumps = true, -- whether to set jumps in the jumplist
-          goto_next_start = {
-            ["]m"] = "@function.outer",
-            ["]]"] = "@class.outer",
-          },
-          goto_next_end = {
-            ["]M"] = "@function.outer",
-            ["]["] = "@class.outer",
-          },
-          goto_previous_start = {
-            ["[m"] = "@function.outer",
-            ["[["] = "@class.outer",
-          },
-          goto_previous_end = {
-            ["[M"] = "@function.outer",
-            ["[]"] = "@class.outer",
-          },
-        },
-        swap = {
-          enable = true,
-          swap_next = {
-            ["<leader>a"] = "@parameter.inner",
-          },
-          swap_previous = {
-            ["<leader>A"] = "@parameter.inner",
-          },
-        },
-      },
-    },
+    dependencies = { { "p00f/nvim-ts-rainbow", lazy = true } },
+    opts = require("custom.configs.treesitter").opts,
   },
   { -- Better notification messages (popups)
     "rcarriga/nvim-notify",
-    keys = {
-      {
-        "<leader>un",
-        function()
-          require("notify").dismiss { silent = true, pending = true }
-        end,
-        desc = "Delete all Notifications",
-      },
-    },
-    opts = {
-      timeout = 3000,
-      max_height = function()
-        return math.floor(vim.o.lines * 0.75)
-      end,
-      max_width = function()
-        return math.floor(vim.o.columns * 0.75)
-      end,
-    },
-    init = function()
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "VeryLazy",
-        callback = function()
-          vim.notify = require "notify"
-        end,
-      })
-    end,
+    keys = require("custom.configs.nvim-notify").keys,
+    opts = require("custom.configs.nvim-notify").opts,
+    init = require("custom.configs.nvim-notify").init,
   },
   {
     -- add indent guides on bank lines
@@ -179,95 +128,27 @@ local plugins = {
     -- better window movement
     "s1n7ax/nvim-window-picker",
     version = "v1.*",
-    keys = {
-      {
-        "<leader>pw",
-        function()
-          local picked_id = require("window-picker").pick_window() or vim.api.nvim_get_current_win()
-          vim.api.nvim_set_current_win(picked_id)
-        end,
-        desc = "[P]ick [W]indow",
-      },
-    },
-    opts = {
-      include_current = false,
-      autoselect_one = true,
-      filter_rules = {
-        bo = {
-          -- ignore neo-tree or notify windows
-          filetype = { "neo-tree", "neo-tree-popup", "notify" },
-          -- Ignore terminal and quickfix buffers
-          buftype = { "terminal", "quickfix" },
-        },
-      },
-      other_win_hl_color = "#e35e4f",
-    },
+    keys = require("custom.configs.windowpicker").keys,
+    opts = require("custom.configs.windowpicker").opts,
   },
   { "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
   {
     -- VSCode like debug UI
     "rcarriga/nvim-dap-ui",
+    cmd = { "DapContinue" }, -- TODO: may want to change these commands
     dependencies = {
       {
         "mfussenegger/nvim-dap",
-        opts = {},
-        config = function(_, opts)
-          local DAP = require "dap"
-          local DAPUI = require "dapui"
-
-          -- Configure dap-ui to auto open/close with DAP
-          DAP.listeners.after.event_initialized["dapui_config"] = function()
-            DAPUI.open()
-          end
-          DAP.listeners.before.event_terminated["dapui_config"] = function()
-            DAPUI.close()
-          end
-          DAP.listeners.before.event_exited["dapui_config"] = function()
-            DAPUI.close()
-          end
-          DAPUI.setup()
-        end,
+        opts = require("custom.configs.dap").nvim_dap.opts,
+        config = require("custom.configs.dap").nvim_dap.config,
       },
       {
         "mfussenegger/nvim-dap-python",
-        config = function(_, opts)
-          -- Virtualenv should contain debugpy
-          require("dap-python").setup(vim.g.python3_host_prog)
-        end,
+        config = require("custom.configs.dap").dap_python.config,
       },
     },
-    cmd = { "DapContinue" }, -- TODO: may want to change these commands
   },
-  {
-    -- TODO: Format on write
-    "jose-elias-alvarez/null-ls.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "mason.nvim" },
-    opts = function()
-      local nls = require "null-ls"
-      return {
-        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
-        -- NOTE: https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
-        sources = { -- FIXME: Several of these need to be installed on path?
-          -- Completion
-          nls.builtins.completion.spell,
-          -- Diagnostics
-          nls.builtins.diagnostics.jsonlint,
-          nls.builtins.diagnostics.markdownlint,
-          nls.builtins.diagnostics.pylint,
-          nls.builtins.diagnostics.write_good, -- "English prose linter"
-          -- Formatters
-          nls.builtins.formatting.autoflake,
-          nls.builtins.formatting.black,
-          nls.builtins.formatting.shfmt,
-          nls.builtins.formatting.stylua,
-          -- Hover
-          nls.builtins.hover.dictionary, -- Definitions
-          nls.builtins.hover.printenv, -- Show env values
-        },
-      }
-    end,
-  },
+
   {
     -- TODO: Opts?
     "windwp/nvim-spectre",
