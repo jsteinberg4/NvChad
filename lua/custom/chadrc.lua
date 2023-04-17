@@ -3,9 +3,9 @@
 -- https://www.youtube.com/watch?v=Mtgo-nP_r8Y
 local M = {}
 M.ui = {
-  theme = 'nightlamp',
+  theme = "onenord_light",
   -- TODO: Find a tolerable light theme to toggle to
-  theme_toggle = { "nightlamp", "everforest_light" },
+  theme_toggle = { "nord", "onenord_light" },
   hl_override = {
     -- Reasoning for the CursorLine override:
     -- https://github.com/NvChad/NvChad/issues/863
