@@ -33,6 +33,7 @@ M.mason_servers = {
 M.lsp_server_names = {
   "bashls",
   "clangd",
+  "cmake",
   "cssls",
   "eslint",
   "jsonls",
@@ -43,7 +44,7 @@ M.lsp_server_names = {
 }
 
 -- Names of TreeSitter modules
--- NOTE: see https://github.com/nvim-treesitter/nvim-treesitter#supported-languages 
+-- NOTE: see https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
 M.treesitter_servers = {
   "bash",
   "c",

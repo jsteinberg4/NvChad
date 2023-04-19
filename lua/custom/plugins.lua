@@ -31,14 +31,7 @@ local plugins = {
       { "[[", desc = "Prev Reference" },
     },
   },
-  {
-    -- TODO: Automatically run MasonInstall{All?} if servers are not present
-    "williamboman/mason.nvim",
-    -- priority = 55, -- Force loading before mason-lspconfig
-    opts = {
-      ensure_installed = require("custom.configs.lsp_servers").mason_servers,
-    },
-  },
+
   {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -47,18 +40,7 @@ local plugins = {
     -- stylua: ignore
     config = function(_, opts) require("todo-comments").setup(opts) end,
   },
-  -- {
-  --   "williamboman/mason-lspconfig.nvim",
-  --   priority = 50, -- Force loading *after* mason.nvim
-  --   opts = {
-  --     -- automatic_installation = true,
-  --     ensure_installed = {
-  --       "lua_ls", -- "lua-language-server"
-  --       "pyright",
-  --     },
-  --   },
-  --   cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUninstall", "MasonUninstallAll", "MasonLog" },
-  -- },
+  -- ,
   { -- surround operators
     "echasnovski/mini.surround",
     -- TODO : Keybindings
@@ -70,6 +52,11 @@ local plugins = {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
+      {
+        -- TODO: Automatically run MasonInstall{All?} if servers are not present
+        "williamboman/mason.nvim",
+        opts = require("custom.configs.mason").opts,
+      },
       {
         -- TODO: Format on write
         "jose-elias-alvarez/null-ls.nvim",
@@ -86,7 +73,10 @@ local plugins = {
           global_settings = "neoconf-global.json",
         },
       },
-      { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
+      {
+        "folke/neodev.nvim",
+        opts = { experimental = { pathStrict = true } },
+      },
     },
     config = function()
       require "custom.configs.pre-lspconfig"
@@ -95,6 +85,14 @@ local plugins = {
       require "custom.configs.lspconfig"
     end,
   },
+  -- {
+  --   "p00f/clangd_extensions.nvim",
+  --   ft = ".c",
+  --   opts = {},
+  --   config = function(_, opts)
+  --     require("clangd_extensions").setup(opts)
+  --   end,
+  -- },
   {
     "nvim-treesitter/nvim-treesitter",
     dependencies = { { "p00f/nvim-ts-rainbow", lazy = true } },

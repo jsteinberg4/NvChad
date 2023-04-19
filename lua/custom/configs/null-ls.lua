@@ -5,8 +5,7 @@ local nls = require "null-ls"
 opts.root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git")
 
 -- NOTE: https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
-opts.sources = {
-  -- WARN: These must be installed globally or via Mason
+opts.sources = { -- WARN: These must be installed globally or via Mason
   -- Completion
   nls.builtins.completion.spell,
   -- Diagnostics
