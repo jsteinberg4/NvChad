@@ -3,7 +3,7 @@
 -- https://www.youtube.com/watch?v=Mtgo-nP_r8Y
 local M = {}
 M.ui = {
-  theme = "onenord_light",
+  theme = "nord",
   -- TODO: Find a tolerable light theme to toggle to
   theme_toggle = { "nord", "onenord_light" },
   hl_override = {
@@ -12,9 +12,6 @@ M.ui = {
     CursorLine = {
       bg = "one_bg",
     },
-  },
-  nvdash = {
-    load_on_startup = true,
   },
 }
 -- Add any additional plugins here as a table

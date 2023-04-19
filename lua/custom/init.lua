@@ -14,7 +14,7 @@ global.netrw_winsize = 25
 -- Python provider setup
 -- Enable python provider (NvChad disables by default)
 global.loaded_python3_provider = nil
-global.python3_host_prog = os.getenv("HOME") .. "/environments/neovim-provider/bin/python3"
+global.python3_host_prog = os.getenv "HOME" .. "/environments/neovim-provider/bin/python3"
 
 --------------------options--------------------
 opt.autowrite = true -- Autosave
@@ -45,7 +45,7 @@ opt.pumblend = 10 -- Popup window transparency
 opt.pumheight = 10 -- Max # of entries in a popup
 opt.relativenumber = true -- Show relative line numbers
 opt.ruler = true -- Shows cursor position in status line
-opt.scrolloff = 8 -- Show N lines of context around cursor
+opt.scrolloff = 3 -- Show N lines of context around cursor
 opt.sessionoptions = "buffers,curdir,tabpages,winsize" -- Enables saving/restoring each of these
 opt.shiftround = true -- Always indent by a multiple of shiftwidth
 opt.shiftwidth = 2 -- Width of an indent
@@ -75,41 +75,40 @@ local autocmd = vim.api.nvim_create_autocmd
 
 -- Highlight on Yank
 augroup("HighlightYank", { clear = true })
-autocmd('TextYankPost', {
-    group = 'HighlightYank',
-    pattern = '*',
-    callback = function()
-        vim.highlight.on_yank({
-            higroup = 'IncSearch',
-            timeout = 40,
-        })
-    end,
+autocmd("TextYankPost", {
+  group = "HighlightYank",
+  pattern = "*",
+  callback = function()
+    vim.highlight.on_yank {
+      higroup = "IncSearch",
+      timeout = 40,
+    }
+  end,
 })
 
 -- Remember code folds on exit
-augroup('RememberFolds', {})
-autocmd('BufWinEnter', {
-    pattern = '*',
-    command = 'silent! loadview',
+augroup("RememberFolds", {})
+autocmd("BufWinEnter", {
+  pattern = "*",
+  command = "silent! loadview",
 })
-autocmd('BufWinLeave', {
-    pattern = '*',
-    command = 'silent! mkview',
+autocmd("BufWinLeave", {
+  pattern = "*",
+  command = "silent! mkview",
 })
-
 
 -- Terminal Settings
 -------------------
 -- Open term in right tab
-autocmd('CmdlineEnter', {
-    command = 'command! Term :botright vsplit term://$SHELL',
+autocmd("CmdlineEnter", {
+  command = "command! Term :botright vsplit term://$SHELL",
 })
 
 -- Enter insert mode on open term
-autocmd('TermOpen', {
-    command = 'setlocal listchars= nonumber norelativenumber nocursorline'
+autocmd("TermOpen", {
+  command = "setlocal listchars= nonumber norelativenumber nocursorline",
 })
-autocmd('TermOpen', {
-    pattern = '',
-    command = 'startinsert',
+autocmd("TermOpen", {
+  pattern = "",
+  command = "startinsert",
 })
