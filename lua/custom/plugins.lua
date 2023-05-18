@@ -2,6 +2,13 @@
 -- Plugin definitions follow the folke/lazy.nvim spec
 local plugins = {
   {
+    "nvim-tree/nvim-tree.lua",
+    opts = function()
+      default_opts = require "plugins.configs.nvimtree"
+      default_opts.view.hide_root_folder = nil
+    end,
+  },
+  {
     "RRethy/vim-illuminate",
     event = { "BufReadPost", "BufNewFile" },
     opts = { delay = 200 },
